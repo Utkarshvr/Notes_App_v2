@@ -7,7 +7,6 @@ import User from "../models/user.model.js";
 
 export const getUser = async (req, res, next) => {
   try {
-    console.log(req.user);
     const user = await User.findById(req.user);
 
     return sendRes(res, 200, true, `Welcome Back, ${user?.username}`, { user });

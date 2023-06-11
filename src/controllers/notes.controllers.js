@@ -4,8 +4,10 @@ import Notes from "../models/notes.model.js";
 
 export const getAllNotes = async (req, res, next) => {
   try {
-    const notes = await Notes.find({}).populate("creator");
-    console.log(notes);
+    const notes = await Notes.find({ creator: { _id: req.user } })
+      .populate("creator")
+      .sort({ updatedAt: -1 });
+
     return sendRes(res, 200, true, configResponse.messages.NOTES_FOUND, {
       notes,
     });
@@ -34,8 +36,11 @@ export const createNote = async (req, res, next) => {
   try {
     const { title, desc } = req.body;
     const note = await Notes.create({ creator: req.user, title, desc });
+
+    const populatedNote = await Notes.findById(note._id).populate("creator");
+
     return sendRes(res, 201, true, configResponse.messages.NOTE_CREATED, {
-      note,
+      note: populatedNote,
     });
   } catch (error) {
     return next(error);
@@ -49,14 +54,23 @@ export const updateNote = async (req, res, next) => {
 
     // if I provide creator field, then it will overwrite else will remain the same
     // since, I want it to remain the same, I willn't send the creator field again
-    const note = await Notes.findByIdAndUpdate(noteID, {
-      title,
-      desc,
-    });
+    const note = await Notes.findByIdAndUpdate(
+      noteID,
+      {
+        title,
+        desc,
+      },
+      { new: true }
+    );
+
+    const populatedNote = await Notes.findById(note._id).populate("creator");
+
     if (!note)
       return sendRes(res, 404, false, configResponse.messages.NOT_FOUND);
 
-    return sendRes(res, 200, true, configResponse.messages.NOTE_UPDATED);
+    return sendRes(res, 200, true, configResponse.messages.NOTE_UPDATED, {
+      note: populatedNote,
+    });
   } catch (error) {
     return next(error);
   }

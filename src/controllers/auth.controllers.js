@@ -29,6 +29,9 @@ export const createUser = async (req, res, next) => {
     // create(user)
     userDB = await User.create({ username, email, password: hash });
 
+    // Delete the password field from the userDB object
+    delete userDB.password;
+
     return sendJWT(
       res,
       201,
@@ -47,7 +50,6 @@ export const loginUser = async (req, res, next) => {
   try {
     // find user with same username
     const userDB = await User.findOne({ username });
-    console.log(userDB);
 
     // if not found
     if (!userDB)
@@ -63,6 +65,10 @@ export const loginUser = async (req, res, next) => {
       return next(
         new ErrorHandler(configResponse.messages.WRONG_PASSWORD, 401)
       );
+
+    // Delete the password field from the userDB object
+    delete userDB.password;
+
     // send user
     return sendJWT(
       res,

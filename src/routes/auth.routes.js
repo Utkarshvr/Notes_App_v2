@@ -15,8 +15,6 @@ import {
   checkSignupBody,
 } from "../middlewares/validation/validator.js";
 
-import isAuthenticated from "../middlewares/authentication/isAuthenticated.js";
-
 // Register
 authRouter.post("/register", checkSignupBody, validateField, createUser);
 
@@ -24,6 +22,7 @@ authRouter.post("/register", checkSignupBody, validateField, createUser);
 authRouter.post("/login", checkLoginBody, validateField, loginUser);
 
 // Logout
-authRouter.get("/logout", isAuthenticated, logoutUser); // isAuth included, Since a user should be able to logout only when its still login
+authRouter.post("/logout", logoutUser);
+// isAuth is excluded, Since a user will not be able to logout if his cookie expires
 
 export default authRouter;

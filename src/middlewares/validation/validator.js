@@ -4,8 +4,6 @@ import { sendRes } from "../../helpers/sendRes.helper.js";
 // Validating The Sent Request Body
 export const checkSignupBody = [
   body("username", "Enter a valid username")
-    .notEmpty()
-    .withMessage("Field must not be empty")
     .trim()
     .isLength({ min: 3 })
     .withMessage("Field must have a minimum length of 3 characters")
@@ -24,8 +22,12 @@ export const checkSignupBody = [
 ];
 
 export const checkLoginBody = [
-  body("email", "Enter A Valid Email").isEmail(),
-  body("password", "Password Cannot Be Blank").exists(),
+  body("username", "Enter A Valid Email")
+    .notEmpty()
+    .withMessage("Username can not be empty"),
+  body("password", "Password Cannot Be Blank")
+    .notEmpty()
+    .withMessage("Password can not be empty"),
 ];
 
 export const checkNotes = [

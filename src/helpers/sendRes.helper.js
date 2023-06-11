@@ -3,13 +3,13 @@ export const sendRes = (
   StatusCode,
   success,
   msg,
-  data = null,
+  payload = null,
   error = null
 ) => {
   res.status(StatusCode).json({
     success,
     msg,
-    data,
+    payload,
     error,
   });
 };
