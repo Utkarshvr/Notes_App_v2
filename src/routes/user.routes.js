@@ -10,6 +10,9 @@ import {
 
 import isAuthenticated from "../middlewares/authentication/isAuthenticated.js";
 
+// Better Syntax
+// userRouter.all("/", isAuthenticated).get(getUser).put(updateUser).delete(deleteUser)
+
 // Get User
 userRouter.get("/", isAuthenticated, getUser);
 
